@@ -1,0 +1,19 @@
+<main>
+    <h2>Benvenuto</h2>
+    <p>Questa è la pagina principale della nostra applicazione Angular.</p>
+    <div class="container">
+        @for (card of cards; track $index) {
+        <div class="card-container">
+           <span> {{ card.name }} </span>
+           <span>{{ card.type }}</span>
+           <span>{{ card.desc }}</span>
+           <span>{{ card.image }}</span>
+        </div>
+    }
+    </div>
+    
+
+    <p>HOME CARICATA ✅</p>
+    <p>cards: {{ cards.length }}</p>
+
+</main>
