@@ -1,47 +1,32 @@
-// import { Component, inject } from '@angular/core';
-// import { DataService } from '../../services/data-service';
-// @Component({
-//   selector: 'app-home',
-//   imports: [],
-//   templateUrl: './home.html',
-//   styleUrl: './home.scss',
-// })
-// export class Home {
-
-//   yugiDataService = inject(DataService);
-
-//   cards : any[] = [];
-
-//   constructor() {
-//     this.yugiDataService.fetchData()
-//     .then(data => {
-//       console.log(data[0]);
-//       this.cards = data;
-//     });
-//   }
-
-// }
-import { Component, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { DataService } from '../../services/data-service';
-
+import { Card } from "../card/card";
 @Component({
   selector: 'app-home',
   templateUrl: './home.html',
   styleUrl: './home.scss',
+  imports: [Card],
 })
 export class Home {
-  yugiDataService = inject(DataService);
-  cdr = inject(ChangeDetectorRef);
+  private yugiDataService = inject(DataService);
 
-  cards: any[] = [];
+  // stato "reactive"
+  cards: WritableSignal<any[]> = signal([]);
+
+  // (facoltativo) stato loading / error
+  loading = signal(true);
+  error = signal<string | null>(null);
 
   constructor() {
     this.yugiDataService.fetchData()
-      .then(data => {
-        console.log('ARRIVATI', data.length);
-        this.cards = data;
-        this.cdr.detectChanges(); // <-- QUESTO fa aggiornare il DOM
+      .then((data) => {
+        this.cards.set(data);
+        this.loading.set(false);
       })
-      .catch(err => console.error(err));
+      .catch((err) => {
+        console.error(err);
+        this.error.set('Errore nel caricamento dei dati');
+        this.loading.set(false);
+      });
   }
 }

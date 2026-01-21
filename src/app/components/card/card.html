@@ -1,0 +1,12 @@
+<div class="card-container">
+      <span>{{ cardData().name }}</span>
+      <span>{{ cardData().type }}</span>
+      <span>{{ cardData().desc }}</span>
+
+      <img
+        class="card-img"
+        [src]="cardData().card_images?.[0]?.image_url"
+        [alt]="cardData().name"
+        loading="lazy"
+      />
+    </div>
